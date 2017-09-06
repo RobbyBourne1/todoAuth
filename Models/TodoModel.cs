@@ -20,5 +20,8 @@ namespace todoAuth.Models
             IsComplete = true;
             Time = DateTime.Now;
         } 
+
+        public int UserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }
