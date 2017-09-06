@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model List<TodoModel>
+
+    <section>
+        <h1>Todo List</h1>
+        <form asp-controller="Todo" asp-action="Index" method="Post">
+            <input type="text" name="NewItem" autofocus="">
+            <button type="submit">Add to Todo List</button>
+        </form>
+    </section>
+    <section>
+        <h2>Pending</h2>
+        <ul>
+            @foreach(var item in Model)
+            {
+                @if(item.IsComplete == false)
+                {
+                    <li>@item.TaskName</li>
+                    <form asp-controller="Todo" asp-action="IsComplete" method="Post">
+                    <input type="hidden" name="Id" value="@item.Id">
+                    <button type="submit">Complete</button>
+                    </form>
+                }
+            }
+        </ul>
+    </section>
+    <section>
+        <h2>Completed</h2>
+        <ul>
+            @foreach(var item in Model)
+            {
+                @if(item.IsComplete == true)
+                {
+                    <li>@item.TaskName</li>
+                    <p>@item.Time</p>
+                }
+            }
+        </ul>
+    </section>
