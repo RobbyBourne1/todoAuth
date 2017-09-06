@@ -8,16 +8,17 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 using todoAuth.Data;
 
-namespace todoAuth.Data.Migrations
+namespace todoAuth.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170906143511_AddingTodoModel")]
+    [Migration("20170906150704_AddingTodoModel")]
     partial class AddingTodoModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -182,7 +183,7 @@ namespace todoAuth.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("IsComplete");
+                    b.Property<bool?>("IsComplete");
 
                     b.Property<string>("TaskName");
 

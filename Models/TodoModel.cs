@@ -12,7 +12,7 @@ namespace todoAuth.Models
     { 
         public int Id { get; set; }
         public string TaskName { get; set; }
-        public bool IsComplete { get; set; } = false;
+        public bool? IsComplete { get; set; } = false;
         public DateTime Time { get; set; } = DateTime.Now;
 
         public void Complete()
