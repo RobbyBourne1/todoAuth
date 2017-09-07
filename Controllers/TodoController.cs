@@ -39,20 +39,12 @@ namespace todoAuth.Controllers
                 TaskName = newToDoName
             };
 
-            currentToDo.UserId = user.Id;
+            currentToDo.UserId = user;
 
             _context.Todos.Add(currentToDo);
             _context.SaveChanges();
 
             return View(_context.Todos.Where(w => w.UserId == user.Id).ToList());
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-
-            var applicationDbContext = _context.Todos.Include(p => p.UserId).Where(w => w.UserId == user.Id);
-            return View(await applicationDbContext.ToListAsync());
         }
 
         [HttpPost]
