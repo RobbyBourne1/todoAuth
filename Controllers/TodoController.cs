@@ -6,34 +6,53 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using todoAuth.Models;
 using todoAuth.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace todoAuth.Controllers
 {
+    [Authorize]
     public class TodoController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public TodoController(ApplicationDbContext context)
+        public TodoController(ApplicationDbContext context, UserManager<ApplicationUser> um)
         {
             _context = context;
+            _userManager = um;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_context.Todos.ToList()); 
+            var applicationDbContext = _context.Todos.Include(p => p.UserId);
+            return View(await applicationDbContext.ToListAsync());
         }
- 
         [HttpPost]
-        public IActionResult Index(string NewItem)
+        public async Task<IActionResult> Index(string newToDoName)
         {
-            var currentToDo = new TodoModel{
-                TaskName = NewItem
-            }; 
+            var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            _context.Add(currentToDo);
+            var currentToDo = new TodoModel
+            {
+                TaskName = newToDoName
+            };
+
+            currentToDo.UserId = user.Id;
+
+            _context.Todos.Add(currentToDo);
             _context.SaveChanges();
 
-            return View(_context.Todos.ToList());
+            return View(_context.Todos.Where(w => w.UserId == user.Id).ToList());
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            var applicationDbContext = _context.Todos.Include(p => p.UserId).Where(w => w.UserId == user.Id);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         [HttpPost]
@@ -43,7 +62,7 @@ namespace todoAuth.Controllers
             finished.Complete();
             _context.SaveChanges();
             return RedirectToAction(nameof(Index), nameof(TodoController));
-        } 
+        }
 
         public IActionResult Error()
         {
