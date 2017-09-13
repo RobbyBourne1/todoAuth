@@ -39,7 +39,7 @@ namespace todoAuth.Controllers
                 TaskName = newToDoName
             };
 
-            currentToDo.UserId = user;
+            currentToDo.UserId = user.Id;
 
             _context.Todos.Add(currentToDo);
             _context.SaveChanges();
