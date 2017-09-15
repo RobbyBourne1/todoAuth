@@ -21,7 +21,7 @@ namespace todoAuth.Models
             Time = DateTime.Now;
         } 
 
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
     }
 }
